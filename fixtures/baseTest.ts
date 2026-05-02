@@ -4,6 +4,7 @@ import { CheckoutPage } from '../pages/checkoutPage';
 import { InventoryPage } from '../pages/inventoryPage';
 import { LoginPage } from '../pages/loginPage';
 import { users } from '../test-data/users';
+import { saveFailureArtifact } from '../utils/aiTriage/saveFailureArtifact';
 
 type AppFixtures = {
   loginPage: LoginPage;
@@ -36,6 +37,10 @@ export const test = base.extend<AppFixtures>({
       await loginPage.login(users.standard.username, users.standard.password);
     });
   },
+});
+
+test.afterEach(async ({}, testInfo) => {
+  saveFailureArtifact(testInfo);
 });
 
 export { expect } from '@playwright/test';

@@ -36,7 +36,7 @@ export class CheckoutPage {
   }
 
   async verifyOrderSuccess(): Promise<void> {
-    await expect(this.successMessage).toContainText('Thank you for your order');
+    await expect(this.successMessage).toContainText('Thank you for your order!!!');
   }
 
   async verifyErrorContains(text: string): Promise<void> {
