@@ -13,7 +13,8 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "ai:triage": "tsx utils/aiTriage/runTriage.ts"
+    "ai:triage": "tsx utils/aiTriage/runTriage.ts",
+    "ai:triage:batch": "tsx utils/aiTriage/runBatchTriage.ts"
   },
   "keywords": [
     "playwright",

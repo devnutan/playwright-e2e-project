@@ -34,6 +34,6 @@ test.describe('Checkout', () => {
   }) => {
     await cartPage.clickCheckout();
     await checkoutPage.continue();
-    await checkoutPage.verifyErrorContains('First Name is required');
+    await checkoutPage.verifyErrorContains('First Name is not required');
   });
 });
