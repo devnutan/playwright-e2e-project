@@ -1,60 +1,192 @@
-# Playwright e2e TypeScript Framework
+**AI Test Failure Analyzer (Playwright + CI Scaling)**
 
-This project demonstrates how to structure a maintainable UI automation framework using:
-- Page Object Model
-- custom fixtures
-- reusable test data
-- environment-based configuration
-- ESLint + Prettier
-- GitHub Actions CI
+A Playwright TypeScript automation framework enhanced with an **AI-powered failure triage system**, designed to scale from single test failures to CI-level insights.
 
-It covers
-- maintainable test design
-- reusable fixtures and page objects
-- positive and negative scenarios
-- CI execution in GitHub Actions
-- clean project organization for scaling
+**Why This Project Exists**
 
----
+We’ve optimized how tests run:
 
-## Tech Stack
+* fast execution
+* parallel pipelines
+* stable frameworks
 
-- Playwright
-- TypeScript
-- Node.js
-- ESLint
-- Prettier
-- GitHub Actions
+But one major problem remains:
 
----
+> Understanding *why* tests fail is still manual.
 
-## Application Under Test
+Engineers spend time:
 
-**SauceDemo**
+* reading logs
+* analyzing stack traces
+* correlating failures
 
-Main workflows covered:
-- login
-- invalid login
-- locked out user validation
-- inventory page validation
-- product sorting
-- add to cart
-- remove from cart
-- checkout flow
-- checkout form validation
+This project explores a simple idea:
+
+> Treat test failures as structured inputs
+> and add a reasoning layer on top.
 
 ---
 
-## Project Structure
+**What This Project Does**
 
-```text
-.
-├── .github/workflows/    # CI pipeline
-├── fixtures/             # Custom Playwright fixtures
-├── pages/                # Page Object Model classes
-├── test-data/            # Static test data
-├── tests/                # Test specifications
-├── utils/                # Helpers and environment loader
-├── .env.example          # Example environment variables
-├── playwright.config.ts  # Playwright configuration
-└── README.md
+### 1. Capture Failures
+
+Automatically stores Playwright failures as structured JSON:
+
+```json
+{
+  "testTitle": "...",
+  "errorMessage": "...",
+  "stackTrace": "...",
+  "retry": 0
+}
+```
+
+### 2. Analyze Failures (Single)
+
+Generate AI-based explanation for one failure:
+
+```bash
+npm run ai:triage -- --input failure-artifacts/<file>.json
+```
+
+Output:
+
+```txt
+Root cause: Assertion mismatch
+Category: test_issue
+Suggested next step: Update expected text
+```
+
+### 3. Batch Analysis (CI-Scale)
+
+Analyze all failures together:
+
+```bash
+npm run ai:triage:batch
+```
+
+Output:
+
+```txt
+AI Batch Failure Summary
+
+Total failures: 3
+test_issue: 2
+flaky_or_environment: 1
+```
+
+## 🏗️ Architecture
+
+```txt
+Playwright Test Run
+        ↓
+Failure Artifacts (JSON)
+        ↓
+Format & Normalize Context
+        ↓
+AI Reasoning Layer
+        ↓
+Single Analysis / Batch Summary
+        ↓
+CI Report / Insights
+```
+
+## ⚙️ How It Works
+
+### Step 1 — Run Tests
+
+```bash
+npx playwright test
+```
+
+Failures are saved in:
+
+```txt
+failure-artifacts/
+```
+
+### Step 2 — Run AI Triage (Single)
+
+```bash
+npm run ai:triage -- --input failure-artifacts/<file>.json
+```
+
+### Step 3 — Run Batch Triage
+
+```bash
+npm run ai:triage:batch
+```
+
+## 📂 Project Structure
+
+```txt
+fixtures/
+pages/
+tests/
+
+utils/aiTriage/
+  ├── analyzeFailure.ts
+  ├── formatFailure.ts
+  ├── runTriage.ts
+  ├── runBatchTriage.ts
+  ├── saveFailureArtifact.ts
+  └── types.ts
+
+failure-artifacts/
+ai-triage-reports/
+```
+
+## 🧪 Framework Features
+
+* Playwright + TypeScript
+* Page Object Model
+* Custom fixtures
+* Reusable test data
+* ESLint + Prettier
+* GitHub Actions CI
+
+## 🎯 Application Under Test
+
+[SauceDemo](https://www.saucedemo.com)
+
+Flows covered:
+
+* login
+* inventory validation
+* add/remove cart
+* checkout flow
+* form validation
+
+---
+
+## 🔍 Example Use Case
+
+Failure:
+
+```txt
+Expected: "Thank you for your order!!!"
+Received: "Thank you for your order!"
+```
+
+AI Output:
+
+```txt
+Root cause: Assertion mismatch
+Category: test_issue
+Suggested next step: Update expected text
+```
+
+## 🧠 Key Idea
+
+This project is not about replacing debugging.
+
+> It reduces the time from **failure → understanding**
+
+## ⚠️ Limitations
+
+* Depends on input quality
+* Limited context (no full DOM / trace yet)
+* AI output may vary
+* Complex failures need deeper analysis
+
